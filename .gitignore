@@ -1,0 +1,22 @@
+# build & deps
+node_modules/
+.venv/
+*.pyc
+dist/
+build/
+
+# k8s / helm
+**/.helmignore
+**/charts/
+**/*.tgz
+
+# terraform
+**/.terraform/
+**/.terraform.lock.hcl
+**/*.tfstate*
+**/*.tfplan
+
+# OS/editor
+.DS_Store
+Thumbs.db
+*.swp

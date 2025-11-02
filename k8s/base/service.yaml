@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nyk-demo
+  labels:
+    app.kubernetes.io/name: nyk-demo
+    app.kubernetes.io/part-of: nyk-demo
+    app.kubernetes.io/component: web
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: nyk-demo
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+

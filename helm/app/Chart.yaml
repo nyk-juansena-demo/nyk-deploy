@@ -1,0 +1,4 @@
+apiVersion: v2
+name: nyk-demo-app
+version: 0.1.0
+description: Demo Helm chart for NYK interview
