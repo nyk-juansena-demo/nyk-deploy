@@ -1,17 +1,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Create the namespace first, then layer the base
 resources:
   - namespace.yaml
   - ../../base
   - ingress.yaml
 
-# Target namespace + name prefix
 namespace: dev
 namePrefix: dev-
 
-# Optional: overlay-wide labels
 labels:
   - pairs:
       app.kubernetes.io/environment: dev
@@ -26,37 +23,26 @@ configMapGenerator:
   - name: nyk-web
     files:
       - index.html=./site/index.html
-      - healthz=./site/healthz ## For healthcheck probes
-      - healthz.html=./site/healthz.html ## For browser
+      - healthz=./site/healthz
+      - healthz.html=./site/healthz.html
 
-# Optional: safer patch — target by label instead of hardcoding a name
-# (Assumes base labels include app.kubernetes.io/part-of=nyk-demo)
-#patches:
-#  - target:
-#      kind: Deployment
-#      labelSelector: app.kubernetes.io/part-of=nyk-demo
-    # k8s/overlays/dev/kustomization.yaml  (only the patches section shown)
 patches:
   - target:
       kind: Deployment
       labelSelector: app.kubernetes.io/part-of=nyk-demo
     patch: |-
-      # 1) ensure .spec.template.spec.volumes exists
       - op: add
         path: /spec/template/spec/volumes
         value: []
-      # 2) add our ConfigMap-backed volume
       - op: add
         path: /spec/template/spec/volumes/-
         value:
           name: web
           configMap:
             name: nyk-web
-      # 3) ensure the first container has a volumeMounts array
       - op: add
         path: /spec/template/spec/containers/0/volumeMounts
         value: []
-      # 4) mount the volume at nginx’s web root
       - op: add
         path: /spec/template/spec/containers/0/volumeMounts/-
         value:
@@ -65,24 +51,12 @@ patches:
           readOnly: true
       - op: replace
         path: /spec/template/spec/containers/0/readinessProbe/httpGet/path
-        value: /healthz
+        value: /healthz.html
       - op: replace
         path: /spec/template/spec/containers/0/livenessProbe/httpGet/path
-        value: /healthz
+        value: /healthz.html
 
-# This block enables the CI to bump the image tag via PRs
 images:
-  - name: ghcr.io/NYK-Logistics/nyk-web
-    newName: ghcr.io/NYK-Logistics/nyk-web
+  - name: ghcr.io/nyk-juansena-demo/nyk-web
+    newName: ghcr.io/nyk-juansena-demo/nyk-web
     newTag: latest
-
-
-#      - op: replace ## ???
-#        path: /spec/replicas ## ???
-#        value: 1 ## ???
-
-# Optional: image override — adjust to your real image/name
-# If your base uses nginx:1.25-alpine as shown earlier, this is a no-op.
-# images:
-#   - name: nginx
-#     newTag: "1.25-alpine"
