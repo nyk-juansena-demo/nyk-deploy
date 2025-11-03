@@ -44,7 +44,7 @@
       </div>
 
       <div class="meta">
-        Served by <strong>nginx</strong> on <strong>Kubernetes</strong> via <strong>Traefik Ingress</strong>.<br/>
+        <strong>Containerized app</strong>, shipped with <strong>GitHub Actions</strong> to <strong>Kubernetes</strong>.<br/>
         Host: <code>nyk.localtest.me</code> | Namespace: <code>dev</code>
       </div>
 
@@ -58,10 +58,10 @@
       <div class="footer">
         <hr>
         I built a complete, automated GitOps delivery workflow using 
-        Terraform, Bash scripting, Kubernetes, Argo CD, and GitHub Actions — 
+        Terraform, Bash scripting, AWS, Kubernetes, Argo CD, and GitHub Actions — 
         all running from a local cluster but portable to AWS.
         <hr>
-        For details: <code>kubectl -n dev get ingress,svc,deploy,pods</code> •
+        For details: <code>kubectl get ns,deploy,svc,pods,ingress -n dev</code> •
         <a href="/">Refresh</a>
         
       </div>
