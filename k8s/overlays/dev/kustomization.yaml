@@ -57,6 +57,6 @@ patches:
         value: /healthz.html
 
 images:
-  - name: ghcr.io/nyk-juansena-demo/nyk-web
+  - name: ghcr.io/NYK-Logistics/nyk-web
     newName: ghcr.io/nyk-juansena-demo/nyk-web
     newTag: latest
