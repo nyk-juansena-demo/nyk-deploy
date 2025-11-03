@@ -1,0 +1,24 @@
+name: Build and Push App to ECR
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: [ "app/**" ]
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS credentials (OIDC or access keys)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_IAM_ROLE_ARN }}
+      - name: Login to ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build, tag, and push image
+        run: |
+          IMAGE=${{ vars.ECR_REPO }}
+          docker build -t $IMAGE:latest app
+          docker push $IMAGE:latest
