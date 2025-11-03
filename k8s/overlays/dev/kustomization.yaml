@@ -2,61 +2,64 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - namespace.yaml
-  - ../../base
-  - ingress.yaml
+- namespace.yaml
+- ../../base
+- ingress.yaml
 
 namespace: dev
 namePrefix: dev-
 
 labels:
-  - pairs:
-      app.kubernetes.io/environment: dev
-      app.kubernetes.io/managed-by: kustomize
-    includeSelectors: true
-    includeTemplates: true
+- pairs:
+    app.kubernetes.io/environment: dev
+    app.kubernetes.io/managed-by: kustomize
+  includeSelectors: true
+  includeTemplates: true
 
 generatorOptions:
   disableNameSuffixHash: true
 
 configMapGenerator:
-  - name: nyk-web
-    files:
-      - index.html=./site/index.html
-      - healthz=./site/healthz
-      - healthz.html=./site/healthz.html
+- name: nyk-web
+  files:
+  - index.html=./site/index.html
+  - healthz=./site/healthz
+  - healthz.html=./site/healthz.html
 
 patches:
-  - target:
-      kind: Deployment
-      labelSelector: app.kubernetes.io/part-of=nyk-demo
-    patch: |-
-      - op: add
-        path: /spec/template/spec/volumes
-        value: []
-      - op: add
-        path: /spec/template/spec/volumes/-
-        value:
-          name: web
-          configMap:
-            name: nyk-web
-      - op: add
-        path: /spec/template/spec/containers/0/volumeMounts
-        value: []
-      - op: add
-        path: /spec/template/spec/containers/0/volumeMounts/-
-        value:
-          name: web
-          mountPath: /usr/share/nginx/html
-          readOnly: true
-      - op: replace
-        path: /spec/template/spec/containers/0/readinessProbe/httpGet/path
-        value: /healthz.html
-      - op: replace
-        path: /spec/template/spec/containers/0/livenessProbe/httpGet/path
-        value: /healthz.html
+- target:
+    kind: Deployment
+    labelSelector: app.kubernetes.io/part-of=nyk-demo
+  patch: |-
+    - op: add
+      path: /spec/template/spec/volumes
+      value: []
+    - op: add
+      path: /spec/template/spec/volumes/-
+      value:
+        name: web
+        configMap:
+          name: nyk-web
+    - op: add
+      path: /spec/template/spec/containers/0/volumeMounts
+      value: []
+    - op: add
+      path: /spec/template/spec/containers/0/volumeMounts/-
+      value:
+        name: web
+        mountPath: /usr/share/nginx/html
+        readOnly: true
+    - op: replace
+      path: /spec/template/spec/containers/0/readinessProbe/httpGet/path
+      value: /healthz.html
+    - op: replace
+      path: /spec/template/spec/containers/0/livenessProbe/httpGet/path
+      value: /healthz.html
 
 images:
-  - name: ghcr.io/NYK-Logistics/nyk-web
-    newName: ghcr.io/nyk-juansena-demo/nyk-web
-    newTag: latest
+- name: ghcr.io/NYK-Logistics/nyk-web
+  newName: ghcr.io/nyk-juansena-demo/nyk-web
+  newTag: latest
+- name: ghcr.io/nyk-juansena-demo/nyk-web
+  newName: ghcr.io/nyk-juansena-demo/nyk-web
+  newTag: a9b6074fc628ce7d57bac11fd9ea9125e6892b1c
