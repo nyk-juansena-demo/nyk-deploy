@@ -63,3 +63,6 @@ images:
 - name: ghcr.io/nyk-juansena-demo/nyk-web
   newName: ghcr.io/nyk-juansena-demo/nyk-web
   newTag: a9b6074fc628ce7d57bac11fd9ea9125e6892b1c
+- name: ghcr.io/nyk-juansena-demo/nyk-web
+  newName: ghcr.io/nyk-juansena-demo/nyk-web
+  newTag: a9b6074fc628ce7d57bac11fd9ea9125e6892b1c
