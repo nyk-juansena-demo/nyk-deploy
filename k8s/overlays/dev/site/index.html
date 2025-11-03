@@ -57,12 +57,11 @@
 
       <div class="footer">
         <hr>
-        I took a plain nginx Deployment, 
-        used Kustomize overlays to inject environment-specific branding and 
-        config through ConfigMaps, and routed it through a Traefik Ingress on 
-        a custom local domain — all reproducible via kubectl apply -k.
+        I built a complete, automated GitOps delivery workflow using 
+        Terraform, Bash scripting, Kubernetes, Argo CD, and GitHub Actions — 
+        all running from a local cluster but portable to AWS.
         <hr>
-        Need details? Try <code>kubectl -n dev get ingress,svc,deploy,pods</code> •
+        For details: <code>kubectl -n dev get ingress,svc,deploy,pods</code> •
         <a href="/">Refresh</a>
         
       </div>
