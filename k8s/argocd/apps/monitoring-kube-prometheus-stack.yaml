@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring-kube-prometheus-stack
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 65.4.0   # pick a stable version; update as needed
+    helm:
+      releaseName: monitoring
+      values: |
+        fullnameOverride: monitoring
+        namespaceOverride: monitoring
+
+        grafana:
+          enabled: true
+          adminUser: admin
+          adminPassword: admin123   # better: use a Secret + valuesFrom later
+          service:
+            type: ClusterIP
+          ingress:
+            enabled: true
+            ingressClassName: traefik
+            hosts:
+              - grafana.nyk.localtest.me
+            paths:
+              - /
+            pathType: Prefix
+
+        prometheus:
+          service:
+            type: ClusterIP
+
+        kubeGrafana:
+          enabled: false  # we use grafana.* above instead
+
+        # You can trim components if this cluster is small:
+        kubeControllerManager:
+          enabled: true
+        kubeScheduler:
+          enabled: true
+        kubeProxy:
+          enabled: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
