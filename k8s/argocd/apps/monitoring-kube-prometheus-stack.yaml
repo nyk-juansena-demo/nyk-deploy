@@ -12,6 +12,9 @@ spec:
     helm:
       releaseName: monitoring
       values: |
+        crds:
+          enabled: false
+          
         fullnameOverride: monitoring
         namespaceOverride: monitoring
 
