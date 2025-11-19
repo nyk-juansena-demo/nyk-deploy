@@ -8,45 +8,29 @@ spec:
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: 65.4.0   # pick a stable version; update as needed
+    targetRevision: 65.4.0
     helm:
       releaseName: monitoring
       values: |
+        # IMPORTANT: we install CRDs ourselves with kubectl, so Helm must NOT manage them
         crds:
           enabled: false
-          
+
         fullnameOverride: monitoring
         namespaceOverride: monitoring
 
         grafana:
           enabled: true
           adminUser: admin
-          adminPassword: admin123   # better: use a Secret + valuesFrom later
+          adminPassword: admin123
           service:
             type: ClusterIP
           ingress:
-            enabled: true
-            ingressClassName: traefik
-            hosts:
-              - grafana.nyk.localtest.me
-            paths:
-              - /
-            pathType: Prefix
+            enabled: false
 
         prometheus:
           service:
             type: ClusterIP
-
-        kubeGrafana:
-          enabled: false  # we use grafana.* above instead
-
-        # You can trim components if this cluster is small:
-        kubeControllerManager:
-          enabled: true
-        kubeScheduler:
-          enabled: true
-        kubeProxy:
-          enabled: true
 
   destination:
     server: https://kubernetes.default.svc
