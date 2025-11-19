@@ -11,6 +11,7 @@ spec:
     targetRevision: 65.4.0
     helm:
       releaseName: monitoring
+      skipCrds: true    ### Added this because ArgoCD didn't want to sync, complaining: "CustomResourceDefinition.apiextensions.k8s.io "thanosrulers.monitoring.coreos.com" is invalid: metadata.annotations: Too long: must have at most 262144 bytes" In other words, "skipCrds: true tells Argo’s Helm engine to pass --skip-crds to Helm."
       values: |
         # IMPORTANT: we install CRDs ourselves with kubectl, so Helm must NOT manage them
         crds:
