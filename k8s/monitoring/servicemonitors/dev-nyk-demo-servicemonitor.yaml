@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: dev-nyk-demo-servicemonitor
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - dev
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nyk-demo
+      app.kubernetes.io/environment: dev
+      app.kubernetes.io/component: web
+      app.kubernetes.io/part-of: nyk-demo
+  endpoints:
+    - port: http
+      interval: 30s
+      path: /metrics
+
